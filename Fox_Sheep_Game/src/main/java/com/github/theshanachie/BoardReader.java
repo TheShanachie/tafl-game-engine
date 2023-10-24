@@ -45,7 +45,10 @@ public class BoardReader {
 
                 // check that the line length is valid.
                 if (len <= 0) len = line.length();
-                else if (len != line.length()) return null;
+                else if (len != line.length()) {
+                    in.close();
+                    return null;
+                }
 
                 // add each line to the final list.
                 lineList.add(line);
@@ -63,13 +66,13 @@ public class BoardReader {
                 }
 
                 // return the 2d char grid.
+                in.close();
                 return grid;
             } else {
+                in.close();
                 return null;
             }
 
-            // close the reader
-            in.closse();
         } catch (IOException e) {
             System.err.println(e);
             return null;
