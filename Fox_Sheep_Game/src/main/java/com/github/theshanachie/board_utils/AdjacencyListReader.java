@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * Adjacency List Reader for creating adjacency list from a properly formatted .txt file.
@@ -33,7 +34,7 @@ public class AdjacencyListReader {
      * Get the internal adjacency list multimap.
      * @return the internal adjacency list multimap in the form 'Map<Position, ArrayList<Position>>'.
      */
-    public Map<Position, ArrayList<Position>> get_adjacency_list() { return map; }
+    public Map<Position, ArrayList<Position>> getAdjacencyList() { return map; }
 
     /**
      * Read an adjacency list from a file.
@@ -43,20 +44,29 @@ public class AdjacencyListReader {
     private void readFromFile( String file ) throws Exception
     {
         try {
+            Pattern p = Pattern.compile("\\d,\\d");
             Scanner in = new Scanner(new File(file));
-
-            // reading a non-directed graph
-            while (in.hasNext()) {
-                // read the strings
-                String s = in.next();
-                String e = in.next();
+            while ( in.hasNextLine() ) {
+                Scanner line = new Scanner( in.nextLine() );
+                String s = line.next();
+                if (!s.matches(p.toString())) throw new Exception("String format read in file: " + file + " does not match pattern");
 
                 // get position values from strings
                 Position start = read_position(s);
-                Position end = read_position(e);
 
-                // add new paths to the list
-                addUnDirectedEdge(start, end);
+                // reading a non-directed graph
+                while (line.hasNext()) {
+                    // read the following strings
+                    String e = line.next();
+                    if (!e.matches(p.toString())) throw new Exception("String format read in file: " + file + " does not match pattern");
+
+                    // get position values from strings
+                    Position end = read_position(e);
+
+                    // add new paths to the list
+                    addUnDirectedEdge(start, end);
+                }
+                line.close();
             }
             in.close();
         } catch (Exception ex) {
@@ -97,7 +107,7 @@ public class AdjacencyListReader {
     private Position read_position(String str) throws Exception
     {
         try {
-            String[] strings = str.split("[(),x: y]+");
+            String[] strings = str.split(",");
             return new Position( string_to_int(strings[0]), string_to_int(strings[1]) );
         } catch (Exception ex) {
             throw new Exception("Problem parsing position argument: " + str + " in function: read_position", ex);

@@ -36,7 +36,7 @@ public class BoardReader {
     /**
      * Read from a file path and generate the game board.
      * @param path is String containing the file path to read from.
-     * @return two-dimensional array of type BoardVal
+     * @return two-dimensional array of type BoardVal, or null if the file contains so rows or columns.
      * @throws Exception
      */
     private BoardVal[][] readFromFile( String path ) throws Exception
@@ -57,6 +57,9 @@ public class BoardReader {
      */
     private BoardVal[][] translateGridContents( char[][] grid ) throws Exception
     {
+        // if the grid is empty.
+        if (grid == null) return null;
+
         // Create a grid with a valid size.
         BoardVal[][] result = new BoardVal[grid.length][grid[0].length];
 
@@ -79,7 +82,7 @@ public class BoardReader {
      * Read from a file and retrieve a two-dimensional array of primitive characters.
      * Each line in the file at 'path' should be of equivalent length.
      * @param path is String containing the file path to read from.
-     * @return a two-dimensional array of primitive characters.
+     * @return a two-dimensional array of primitive characters, or null if the file contains no rows or columns.
      * @throws Exception
      */
     private char[][] readRawFromFile( String path ) throws Exception
@@ -121,7 +124,7 @@ public class BoardReader {
                 return grid;
             } else {
                 in.close();
-                throw new Exception("Error reading from file: " + path + " in function: readRawFromFile.");
+                return null;
             }
 
         } catch (IOException ex) {
