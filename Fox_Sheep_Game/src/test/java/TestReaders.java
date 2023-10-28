@@ -99,6 +99,12 @@ public class TestReaders {
         throwable =  assertThrows(Throwable.class, () -> {
             new BoardReader("src/test/resources/invalid_board_00.txt");
         });
+        throwable =  assertThrows(Throwable.class, () -> {
+            new BoardReader("src/test/resources/invalid_board_01.txt");
+        });
+        throwable =  assertThrows(Throwable.class, () -> {
+            new BoardReader("src/test/resources/invalid_board_02.txt");
+        });
     }
 
     @Test
